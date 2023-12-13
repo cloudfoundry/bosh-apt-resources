@@ -4,6 +4,7 @@
 groups:
 - name: debian
   jobs:
+    - update-index-html
 #@ for package in data.values.packages:
     - #@ package.name
 #@ end
@@ -53,12 +54,33 @@ jobs:
         GPG_PRIVATE_KEY: ((gpg_private_key))
 #@ end
 
+- name: update-index-html
+  public: true
+  plan:
+  - get: bosh-apt-resources
+    resource: bosh-apt-resources
+    trigger: true
+  - put: update-index
+    params:
+      file: bosh-apt-resources/apt/index.html
+      acl: public-read
+      content_type: text/html
+
 resources:
 - name: bosh-apt-resources
   type: git
   source:
     branch: master
     uri: https://github.com/cloudfoundry/bosh-apt-resources
+
+- name: update-index
+  type: s3
+  source:
+    bucket: apt.ci.cloudfoundry.org
+    versioned_file: index.html
+    access_key_id: ((aws_access_key))
+    secret_access_key: ((aws_secret_key))
+    region_name: us-east-1
 
 #@ for package in data.values.packages:
 - name: #@ package.name
