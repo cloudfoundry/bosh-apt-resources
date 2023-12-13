@@ -67,5 +67,5 @@ resources:
   source:
     user: #@ package.git.user
     repository: #@ package.git.repository
-    access_token: (( grab meta.github.access_token ))
+    access_token: ((github_public_repo_token))
 #@ end

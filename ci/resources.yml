@@ -15,7 +15,7 @@ packages:
 
 
   - name: bosh-bootloader
-    in_binary: bbl-*_linux_x86-64
+    in_binary: bbl-*_linux_amd64
     out_binary: bbl
     description: "Command line utility for standing up a BOSH director on an IAAS of your choice."
     license: Apache2
