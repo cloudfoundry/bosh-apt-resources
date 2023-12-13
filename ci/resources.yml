@@ -25,3 +25,15 @@ packages:
     git:
       user: cloudfoundry
       repository: bosh-bootloader
+
+  - name: uaa-cli
+    in_binary: uaa-linux-amd64-*
+    out_binary: uaa
+    description: "Command line utility for UAA."
+    license: Apache2
+    vendor: "Cloud Foundry Foundation"
+    url: https://github.com/cloudfoundry/uaa-cli
+    maintainers: https://github.com/cloudfoundry/uaa-cli/graphs/contributors
+    git:
+      user: cloudfoundry
+      repository: uaa-cli
