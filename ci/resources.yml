@@ -37,3 +37,15 @@ packages:
     git:
       user: cloudfoundry
       repository: uaa-cli
+
+  - name: credhub-cli
+    in_binary: credhub-linux-amd64-*
+    out_binary: credhub
+    description: "CLI to interact with CredHub servers"
+    license: Apache2
+    vendor: "Cloud Foundry Foundation"
+    url: https://github.com/cloudfoundry/credhub-cli
+    maintainers: https://github.com/cloudfoundry/credhub-cli/graphs/contributors
+    git:
+      user: cloudfoundry
+      repository: credhub-cli
