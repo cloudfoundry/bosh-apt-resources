@@ -4,7 +4,7 @@ set -e
 [ -n "$DEBUG" ] && set -x
 
 #
-# ci/scripts/create-debian-pkg-from-binary.sh - Create .deb package
+# ci/tasks/create-debian-pkg-from-binary.sh - Create .deb package
 #
 # This script is run from a concourse pipeline (per ci/pipeline.yml).
 #
@@ -22,6 +22,10 @@ VERSION=$(echo $VERSION | sed "s/^[a-z\-]*//")
 VERSION=$(echo $VERSION | sed "s/#.*//")
 # Allow VERSION to be used in IN_BINARY
 IN_BINARY=$(eval echo "${IN_BINARY}")
+
+if [ ! -z "$GEM_HOME" ] then
+  export PATH="$GEM_HOME/bin:$PATH"
+fi
 
 mkdir -p certs
 echo "${GPG_ID:?required}" > certs/id
