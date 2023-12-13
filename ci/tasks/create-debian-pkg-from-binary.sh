@@ -23,7 +23,7 @@ VERSION=$(echo $VERSION | sed "s/#.*//")
 # Allow VERSION to be used in IN_BINARY
 IN_BINARY=$(eval echo "${IN_BINARY}")
 
-if [ ! -z "$GEM_HOME" ] then
+if [ ! -z "$GEM_HOME" ]; then
   export PATH="$GEM_HOME/bin:$PATH"
 fi
 
