@@ -105,6 +105,7 @@ aws_secret_access_key = ${AWS_SECRET_KEY:?required}
 EOF
 deb-s3 upload "${DEBIAN_FILE}" \
   --bucket "${RELEASE_BUCKET}" \
+  --s3-region us-east-1 \
   --sign "$(cat certs/id)"
 
 echo ">> Latest debian package list"
