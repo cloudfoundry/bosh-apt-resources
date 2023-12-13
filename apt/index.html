@@ -9,7 +9,7 @@
   <pre>apt-get update
 apt install gnupg wget -y
 wget -q -O - https://raw.githubusercontent.com/cloudfoundry/bosh-apt-resources/master/public.key | apt-key add -
-echo "deb http://bosh-apt-resources.s3-website.eu-central-1.amazonaws.com/ stable main" | tee /etc/apt/sources.list.d/bosh-cloudfoundry.list
+echo "deb http://apt.ci.cloudfoundry.org stable main" | tee /etc/apt/sources.list.d/bosh-cloudfoundry.list
 apt-get update
 
 apt install bosh-cli

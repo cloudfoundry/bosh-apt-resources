@@ -45,7 +45,7 @@ jobs:
         URL: #@ package.url
         MAINTAINERS: #@ package.maintainers
         VENDOR: #@ package.vendor
-        RELEASE_BUCKET: bosh-apt-resources
+        RELEASE_BUCKET: apt.ci.cloudfoundry.org
         AWS_ACCESS_KEY: ((aws_access_key))
         AWS_SECRET_KEY: ((aws_secret_key))
         GPG_ID: ((gpg_key_id))
