@@ -1,0 +1,27 @@
+#@data/values
+---
+packages:
+  - name: bosh-cli
+    in_binary: bosh-cli-*-linux-amd64
+    out_binary: bosh
+    description: "Interact with BOSH director"
+    license: Apache2
+    vendor: "Cloud Foundry Foundation"
+    url: https://bosh.io/docs/cli-v2.html
+    maintainers: https://github.com/cloudfoundry/bosh-cli/graphs/contributors
+    git:
+      user: cloudfoundry
+      repository: bosh-cli
+
+
+  - name: bosh-bootloader
+    in_binary: bbl-*_linux_x86-64
+    out_binary: bbl
+    description: "Command line utility for standing up a BOSH director on an IAAS of your choice."
+    license: Apache2
+    vendor: "Cloud Foundry Foundation"
+    url: https://github.com/cloudfoundry/bosh-bootloader
+    maintainers: https://github.com/cloudfoundry/bosh-bootloader/graphs/contributors
+    git:
+      user: cloudfoundry
+      repository: bosh-bootloader

@@ -1,0 +1,71 @@
+#@ load("@ytt:data", "data")
+#@yaml/text-templated-strings
+
+groups:
+- name: debian
+  jobs:
+#@ for package in data.values.packages:
+    - #@ package.name
+#@ end
+
+jobs:
+#@ for package in data.values.packages:
+- name: #@ package.name
+  public: true
+  serial_groups: [apt]
+  plan:
+  - get: bosh-apt-resources
+    resource: bosh-apt-resources
+  - get: #@ package.name
+    resource: #@ package.name
+    trigger: true
+  - task: create-debian
+    config:
+      platform: linux
+      image_resource:
+        source:
+          repository: bosh/integration
+          tag: main
+        type: docker-image
+      inputs:
+      - name: bosh-apt-resources
+      - name: #@ package.name
+        path: recipe
+      run:
+        path: "bosh-apt-resources/ci/tasks/create-debian-pkg-from-binary.sh"
+      params:
+        DEBUG: 1
+        REPO_ROOT: bosh-apt-resources
+        REPO_OUT: pushme
+        IN_BINARY: #@ package.in_binary
+        OUT_BINARY: #@ package.out_binary
+        NAME: #@ package.name
+        LICENSE: #@ package.license
+        DESCRIPTION: #@ package.description
+        URL: #@ package.url
+        MAINTAINERS: #@ package.maintainers
+        VENDOR: #@ package.vendor
+        RELEASE_BUCKET: bosh-apt-resources
+        AWS_ACCESS_KEY: ((aws_access_key))
+        AWS_SECRET_KEY: ((aws_secret_key))
+        GPG_ID: ((gpg_key_id))
+        GPG_PUBLIC_KEY: ((gpg_public_key))
+        GPG_PRIVATE_KEY: ((gpg_private_key))
+#@ end
+
+resources:
+- name: bosh-apt-resources
+  type: git
+  source:
+    branch: master
+    uri: https://github.com/cloudfoundry/bosh-apt-resources
+
+#@ for package in data.values.packages:
+- name: #@ package.name
+  type: github-release
+  check_every: 6h
+  source:
+    user: #@ package.git.user
+    repository: #@ package.git.repository
+    access_token: (( grab meta.github.access_token ))
+#@ end
