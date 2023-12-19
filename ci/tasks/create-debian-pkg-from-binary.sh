@@ -68,7 +68,7 @@ if [[ ${IN_BINARY_PREFIX_GZ:-X} != "X" ]]; then
   cd -
 fi
 
-apt install -y file
+apt install -y -q file
 
 recipe_binaries=
 provides=
