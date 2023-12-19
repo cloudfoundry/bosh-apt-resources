@@ -68,11 +68,13 @@ if [[ ${IN_BINARY_PREFIX_GZ:-X} != "X" ]]; then
   cd -
 fi
 
+apt install -y file
+
 recipe_binaries=
 provides=
 for binary in $OUT_BINARY; do
   if [[ "recipe/${IN_BINARY}" != "recipe/${binary}" ]]; then
-    if [[ ls ${IN_BINARY} == *".tgz" ]]; then
+    if file -b recipe/${IN_BINARY} | grep -q "gzip compressed data"; then
       tar xfz recipe/${IN_BINARY} -C recipe
     else
       cp --remove-destination recipe/${IN_BINARY} recipe/${binary}
