@@ -72,7 +72,11 @@ recipe_binaries=
 provides=
 for binary in $OUT_BINARY; do
   if [[ "recipe/${IN_BINARY}" != "recipe/${binary}" ]]; then
-    cp --remove-destination recipe/${IN_BINARY} recipe/${binary}
+    if [[ ls ${IN_BINARY} == *".tgz" ]]; then
+      tar xfz recipe/${IN_BINARY} -C recipe
+    else
+      cp --remove-destination recipe/${IN_BINARY} recipe/${binary}
+    fi
   fi
   chmod +x recipe/${binary}
   recipe_binaries="${recipe_binaries} recipe/${binary}=/usr/bin/${binary} "
