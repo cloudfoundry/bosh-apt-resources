@@ -49,7 +49,7 @@ packages:
       user: cloudfoundry
       repository: credhub-cli
 
-  - name: cloudfoundry-cli-v8
+  - name: cf-cli
     in_binary: cf8-cli_*_linux_x86-64.tgz
     out_binary: cf8
     description: "CLI to interact with cloudfoundry servers"
