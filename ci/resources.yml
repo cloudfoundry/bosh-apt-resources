@@ -13,7 +13,6 @@ packages:
       user: cloudfoundry
       repository: bosh-cli
 
-
   - name: bosh-bootloader
     in_binary: bbl-*_linux_amd64
     out_binary: bbl
@@ -49,3 +48,15 @@ packages:
     git:
       user: cloudfoundry
       repository: credhub-cli
+
+  - name: cloudfoundry-cli-v8
+    in_binary: cf8-cli_*_linux_x86-64.tgz
+    out_binary: cf8
+    description: "CLI to interact with cloudfoundry servers"
+    license: Apache2
+    vendor: "Cloud Foundry Foundation"
+    url: https://github.com/cloudfoundry/cli
+    maintainers: https://github.com/cloudfoundry/cli/graphs/contributors
+    git:
+      user: cloudfoundry
+      repository: cli
