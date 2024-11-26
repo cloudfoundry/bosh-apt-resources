@@ -45,28 +45,7 @@ echo ">> Creating Debian package"
 if [[ ! -x fpm ]]; then
   gem install fpm --no-document
 fi
-if [[ ${IN_BINARY_PREFIX_TGZ:-X} != "X" ]]; then
-  cd recipe
-  tar xfz $IN_BINARY_PREFIX_TGZ*tgz
-  # I think 'hub' needed this; but it doesn't work for riff
-  set +e
-  IN_BINARY=$(ls **/*/$IN_BINARY_AFTER_UNPACK)
-  IN_BINARY=${IN_BINARY:-$IN_BINARY_AFTER_UNPACK}
-  cd -
-  set -e
-fi
-if [[ ${IN_BINARY_PREFIX_ZIP:-X} != "X" ]]; then
-  cd recipe
-  unzip $IN_BINARY_PREFIX_ZIP*zip
-  IN_BINARY=${IN_BINARY_AFTER_UNPACK:-$OUT_BINARY}
-  cd -
-fi
-if [[ ${IN_BINARY_PREFIX_GZ:-X} != "X" ]]; then
-  cd recipe
-  gunzip $IN_BINARY_PREFIX_GZ*gz
-  IN_BINARY=${IN_BINARY_AFTER_UNPACK:-$OUT_BINARY}
-  cd -
-fi
+
 
 apt install -y -q file
 

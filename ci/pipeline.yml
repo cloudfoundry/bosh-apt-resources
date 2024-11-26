@@ -10,6 +10,7 @@ groups:
 #@ end
 
 jobs:
+#@yaml/text-templated-strings
 #@ for package in data.values.packages:
 - name: #@ package.name
   public: true
