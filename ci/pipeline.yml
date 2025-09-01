@@ -4,7 +4,8 @@
 groups:
 - name: debian
   jobs:
-    - update-index-html
+    - update-apt-index-html
+    - update-rpm-index-html
 #@ for package in data.values.packages:
     - #@ package.name
 #@ end
@@ -47,23 +48,37 @@ jobs:
         URL: #@ package.url
         MAINTAINERS: #@ package.maintainers
         VENDOR: #@ package.vendor
-        RELEASE_BUCKET: apt.ci.cloudfoundry.org
+        APT_RELEASE_BUCKET: apt.ci.cloudfoundry.org
+        RPM_RELEASE_BUCKET: rpm.ci.cloudfoundry.org
         AWS_ACCESS_KEY: ((aws_access_key))
         AWS_SECRET_KEY: ((aws_secret_key))
         GPG_ID: ((gpg_key_id))
         GPG_PUBLIC_KEY: ((gpg_public_key))
         GPG_PRIVATE_KEY: ((gpg_private_key))
+
 #@ end
 
-- name: update-index-html
+- name: update-apt-index-html
   public: true
   plan:
   - get: bosh-apt-resources
     resource: bosh-apt-resources
     trigger: true
-  - put: update-index
+  - put: update-apt-index
     params:
       file: bosh-apt-resources/apt/index.html
+      acl: public-read
+      content_type: text/html
+
+- name: update-rpm-index-html
+  public: true
+  plan:
+  - get: bosh-apt-resources
+    resource: bosh-apt-resources
+    trigger: true
+  - put: update-rpm-index
+    params:
+      file: bosh-apt-resources/rpm/index.html
       acl: public-read
       content_type: text/html
 
@@ -74,10 +89,19 @@ resources:
     branch: master
     uri: https://github.com/cloudfoundry/bosh-apt-resources
 
-- name: update-index
+- name: update-apt-index
   type: s3
   source:
     bucket: apt.ci.cloudfoundry.org
+    versioned_file: index.html
+    access_key_id: ((aws_access_key))
+    secret_access_key: ((aws_secret_key))
+    region_name: us-east-1
+
+- name: update-rpm-index
+  type: s3
+  source:
+    bucket: rpm.ci.cloudfoundry.org
     versioned_file: index.html
     access_key_id: ((aws_access_key))
     secret_access_key: ((aws_secret_key))

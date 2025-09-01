@@ -46,6 +46,13 @@ if [[ ! -x fpm ]]; then
   gem install fpm --no-document
 fi
 
+mkdir ~/.aws
+cat > ~/.aws/credentials <<EOF
+[default]
+aws_access_key_id = ${AWS_ACCESS_KEY:?required}
+aws_secret_access_key = ${AWS_SECRET_KEY:?required}
+EOF
+
 
 apt install -y -q file
 
@@ -64,6 +71,10 @@ for binary in $OUT_BINARY; do
   provides="${provides} --provides ${binary} "
 done
 
+
+# -----------------------------
+# Build .deb package
+# -----------------------------
 fpm -s dir -t deb -n "${NAME:?required}" -v "${VERSION}" \
   --vendor "${VENDOR:-Unknown}" \
   --license "${LICENSE:-Unknown}" \
@@ -77,21 +88,45 @@ fpm -s dir -t deb -n "${NAME:?required}" -v "${VERSION}" \
 
 DEBIAN_FILE="${NAME}_${VERSION}_amd64.deb"
 
+
 echo ">> Uploading Debian package to APT repository"
 if [[ ! -x deb-s3 ]]; then
   gem install deb-s3 --no-document
 fi
 
-mkdir ~/.aws
-cat > ~/.aws/credentials <<EOF
-[default]
-aws_access_key_id = ${AWS_ACCESS_KEY:?required}
-aws_secret_access_key = ${AWS_SECRET_KEY:?required}
-EOF
+
 deb-s3 upload "${DEBIAN_FILE}" \
-  --bucket "${RELEASE_BUCKET}" \
+  --bucket "${APT_RELEASE_BUCKET}" \
   --s3-region us-east-1 \
   --sign "$(cat certs/id)"
 
 echo ">> Latest debian package list"
-deb-s3 list -b "${RELEASE_BUCKET}"
+deb-s3 list -b "${APT_RELEASE_BUCKET}"
+
+# -----------------------------
+# Build .rpm package
+# -----------------------------
+echo ">> Creating RPM package"
+fpm -s dir -t rpm -n "${NAME:?required}" -v "${VERSION}" \
+  --vendor "${VENDOR:-Unknown}" \
+  --license "${LICENSE:-Unknown}" \
+  -m "${MAINTAINERS:-Unknown}" \
+  --description "${DESCRIPTION:-Unknown}" \
+  --url "${URL:-Unknown}" \
+  $provides \
+  $recipe_binaries
+
+RPM_FILE="${NAME}-${VERSION}.x86_64.rpm"
+
+echo ">> Uploading RPM package to rpm repository"
+if [[ ! -x rpm-s3 ]]; then
+  gem install rpm-s3 --no-document
+fi
+
+rpm-s3 upload "${RPM_FILE}" \
+  --bucket "${RPM_RELEASE_BUCKET}" \
+  --s3-region us-east-1 \
+  --sign "$(cat certs/id)"
+
+echo ">> Latest rpm package list"
+rpm-s3 list -b "${RPM_RELEASE_BUCKET}"
