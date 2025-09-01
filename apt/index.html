@@ -1,25 +1,34 @@
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<!DOCTYPE html>
+<html>
 <head>
-    <title>BOSH CloudFoundry APT repository</title>
-    <link rel="icon" href="/favicon.ico?v=1" type="image/x-icon" />
+  <meta charset="utf-8">
+  <title>BOSH CloudFoundry APT repository</title>
+  <link rel="icon" href="/favicon.ico?v=1">
 </head>
 <body>
   <h1>BOSH CloudFoundry APT repository</h1>
   <p>When you find yourself on an Ubuntu/Debian machine and you just need your favourite CLIs.</p>
-  <pre>apt-get update
-apt install gnupg wget -y
-wget -q -O - https://raw.githubusercontent.com/cloudfoundry/bosh-apt-resources/master/public.key | apt-key add -
-echo "deb http://apt.ci.cloudfoundry.org stable main" | tee /etc/apt/sources.list.d/bosh-cloudfoundry.list
-apt-get update
+  <pre><code>
+sudo apt-get update
+sudo apt install -y gnupg wget
 
-apt install bosh-cli
-apt install bosh-bootloader
-apt install uaa-cli
-apt install credhub-cli
-apt install cf-cli
+# Import the CloudFoundry APT repo GPG key
+wget -q -O - https://raw.githubusercontent.com/cloudfoundry/bosh-apt-resources/master/public.key | sudo apt-key add -
 
-</pre>
-<p>These packages are <a href="https://bosh.ci.cloudfoundry.org/teams/main/pipelines/bosh-apt-resources/">automatically generated</a> when their respective upstream projects publish new releases.</p>
-<p>The scripts for building these Debian packages are at <a href="https://github.com/cloudfoundry/bosh-apt-resources">https://github.com/cloudfoundry/bosh-apt-resources</a>. Pull requests for new packages and fixes are welcome.</p>
+# Add the CloudFoundry APT repo
+echo "deb http://apt.ci.cloudfoundry.org stable main" | sudo tee /etc/apt/sources.list.d/bosh-cloudfoundry.list
+
+# Refresh metadata and install packages
+sudo apt-get update
+
+sudo apt install -y bosh-cli
+sudo apt install -y bosh-bootloader
+sudo apt install -y uaa-cli
+sudo apt install -y credhub-cli
+sudo apt install -y cf-cli
+  </code></pre>
+
+  <p>These packages are <a href="https://bosh.ci.cloudfoundry.org/teams/main/pipelines/bosh-apt-resources/">automatically generated</a> when their respective upstream projects publish new releases.</p>
+  <p>The scripts for building these Debian packages are at <a href="https://github.com/cloudfoundry/bosh-apt-resources">https://github.com/cloudfoundry/bosh-apt-resources</a>. Pull requests for new packages and fixes are welcome.</p>
 </body>
 </html>
