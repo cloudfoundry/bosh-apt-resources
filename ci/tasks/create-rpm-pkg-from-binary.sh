@@ -46,7 +46,7 @@ if [[ ! -x fpm ]]; then
   gem install fpm --no-document
 fi
 
-mkdir ~/.aws
+mkdir -p ~/.aws
 cat > ~/.aws/credentials <<EOF
 [default]
 aws_access_key_id = ${AWS_ACCESS_KEY:?required}
@@ -85,7 +85,11 @@ fpm -s dir -t rpm -n "${NAME:?required}" -v "${VERSION}" \
   $provides \
   $recipe_binaries
 
-RPM_FILE="${NAME}-${VERSION}.x86_64.rpm"
+RPM_FILE=$(ls ${NAME}-${VERSION}-*.x86_64.rpm | head -n1)
+if [[ -z "$RPM_FILE" ]]; then
+  echo "ERROR: RPM not found for ${NAME}-${VERSION}"
+  exit 1
+fi
 
 WORKDIR=$(mktemp -d)
 
