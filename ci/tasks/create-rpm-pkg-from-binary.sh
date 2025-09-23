@@ -41,7 +41,7 @@ gpg --allow-secret-key-import --import certs/private.key
 echo ">> List keys"
 gpg --list-secret-keys
 
-echo ">> Creating Debian package"
+echo ">> Creating rpm package"
 if [[ ! -x fpm ]]; then
   gem install fpm --no-document
 fi
@@ -72,36 +72,8 @@ for binary in $OUT_BINARY; do
 done
 
 
-# -----------------------------
-# Build .deb package
-# -----------------------------
-fpm -s dir -t deb -n "${NAME:?required}" -v "${VERSION}" \
-  --vendor "${VENDOR:-Unknown}" \
-  --license "${LICENSE:-Unknown}" \
-  -m "${MAINTAINERS:-Unknown}" \
-  --description "${DESCRIPTION:-Unknown}" \
-  --url "${URL:-Unknown}" \
-  --deb-use-file-permissions \
-  --deb-no-default-config-files ${FPM_FLAGS:-} \
-  $provides \
-  $recipe_binaries
-
-DEBIAN_FILE="${NAME}_${VERSION}_amd64.deb"
-
-
-echo ">> Uploading Debian package to APT repository"
-if [[ ! -x deb-s3 ]]; then
-  gem install deb-s3 --no-document
-fi
-
-
-deb-s3 upload "${DEBIAN_FILE}" \
-  --bucket "${APT_RELEASE_BUCKET}" \
-  --s3-region us-east-1 \
-  --sign "$(cat certs/id)"
-
-echo ">> Latest debian package list"
-deb-s3 list -b "${APT_RELEASE_BUCKET}"
+echo ">> Creating RPM package dependencies"
+apt install -y -q rpmbuild
 
 # -----------------------------
 # Build .rpm package
