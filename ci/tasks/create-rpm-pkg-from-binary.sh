@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# set -e
+set -e
 [ -n "$DEBUG" ] && set -x
 
 #
@@ -74,7 +74,7 @@ done
 
 echo ">> Creating RPM package dependencies"
 apt -y -q update
-apt install -y -q rpm
+# apt install -y -q rpm
 
 # -----------------------------
 # Build .rpm package
