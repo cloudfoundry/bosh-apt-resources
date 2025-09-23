@@ -53,8 +53,9 @@ aws_access_key_id = ${AWS_ACCESS_KEY:?required}
 aws_secret_access_key = ${AWS_SECRET_KEY:?required}
 EOF
 
-
-apt install -y -q file
+echo "Installing dependencies"
+apt -y -q update
+apt install -y rpm createrepo-c file
 
 recipe_binaries=
 provides=
@@ -71,11 +72,6 @@ for binary in $OUT_BINARY; do
   provides="${provides} --provides ${binary} "
 done
 
-
-echo ">> Creating RPM package dependencies"
-apt -y -q update
-# apt install -y -q rpm
-
 # -----------------------------
 # Build .rpm package
 # -----------------------------
@@ -91,15 +87,16 @@ fpm -s dir -t rpm -n "${NAME:?required}" -v "${VERSION}" \
 
 RPM_FILE="${NAME}-${VERSION}.x86_64.rpm"
 
-echo ">> Uploading RPM package to rpm repository"
-if [[ ! -x rpm-s3 ]]; then
-  gem install rpm-s3 --no-document
-fi
+WORKDIR=$(mktemp -d)
 
-rpm-s3 upload "${RPM_FILE}" \
-  --bucket "${RPM_RELEASE_BUCKET}" \
-  --s3-region us-east-1 \
-  --sign "$(cat certs/id)"
+# Download existing repo from S3
+aws s3 sync s3://$RPM_RELEASE_BUCKET $WORKDIR
 
-echo ">> Latest rpm package list"
-rpm-s3 list -b "${RPM_RELEASE_BUCKET}"
+# Copy in new rpms
+cp RPM_FILE $WORKDIR/
+
+# Rebuild metadata
+createrepo_c --update $WORKDIR
+
+# Sync back
+aws s3 sync $WORKDIR s3://$RPM_RELEASE_BUCKET --acl public-read
