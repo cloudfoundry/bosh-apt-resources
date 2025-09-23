@@ -93,7 +93,7 @@ WORKDIR=$(mktemp -d)
 aws s3 sync s3://$RPM_RELEASE_BUCKET $WORKDIR
 
 # Copy in new rpms
-cp RPM_FILE $WORKDIR/
+cp $RPM_FILE $WORKDIR/
 
 # Rebuild metadata
 createrepo_c --update $WORKDIR
