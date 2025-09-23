@@ -96,11 +96,18 @@ WORKDIR=$(mktemp -d)
 # Download existing repo from S3
 aws s3 sync s3://$RPM_RELEASE_BUCKET $WORKDIR
 
-# Copy in new rpms
-cp $RPM_FILE $WORKDIR/
+# Determine folder: rpm/<first-letter>/<package>/
+FIRST_LETTER=$(echo "${NAME:0:1}" | tr '[:upper:]' '[:lower:]')
+TARGET_DIR="$WORKDIR/rpm/$FIRST_LETTER/$NAME"
+mkdir -p "$TARGET_DIR"
+
+# Move RPM into structured folder
+cp "$RPM_FILE" "$TARGET_DIR/"
 
 # Rebuild metadata
 createrepo_c --update $WORKDIR
 
 # Sync back
-aws s3 sync $WORKDIR s3://$RPM_RELEASE_BUCKET --acl public-read
+aws s3 sync "$WORKDIR" "s3://$RPM_RELEASE_BUCKET" --acl public-read
+
+echo "RPM repo updated: s3://$RPM_RELEASE_BUCKET"
