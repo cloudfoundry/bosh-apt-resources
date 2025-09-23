@@ -73,7 +73,7 @@ done
 
 
 echo ">> Creating RPM package dependencies"
-apt update
+apt -y -q update
 apt install -y -q rpm
 
 # -----------------------------
