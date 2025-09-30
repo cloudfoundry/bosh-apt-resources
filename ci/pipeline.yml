@@ -82,9 +82,9 @@ jobs:
         RPM_RELEASE_BUCKET: rpm.ci.cloudfoundry.org
         AWS_ACCESS_KEY: ((aws_access_key))
         AWS_SECRET_KEY: ((aws_secret_key))
-        GPG_ID: ((gpg_key_id))
-        GPG_PUBLIC_KEY: ((gpg_public_key))
-        GPG_PRIVATE_KEY: ((gpg_private_key))
+        GPG_ID: ((rpm_gpg_key_id))
+        GPG_PUBLIC_KEY: ((rpm_gpg_public_key))
+        GPG_PRIVATE_KEY: ((rpm_gpg_private_subkey_key))
 
 #@ end
 

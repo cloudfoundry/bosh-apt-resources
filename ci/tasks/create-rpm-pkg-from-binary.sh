@@ -41,26 +41,16 @@ gpg --allow-secret-key-import --import certs/private.key
 echo ">> List keys"
 gpg --list-secret-keys
 
-# -----------------------------
-# Setup RPM signing key
-# -----------------------------
-GPG_KEY_FPR=$(gpg --list-keys --with-colons | awk -F: '/^fpr:/ {print $10; exit}')
-
-if [[ -z "$GPG_KEY_FPR" ]]; then
-  echo "ERROR: No GPG key found for signing RPMs"
-  exit 1
-fi
-
 # Create ~/.rpmmacros for fpm/rpm
 cat > ~/.rpmmacros <<EOF
 %_signature gpg
 %_gpg_path ${HOME}/.gnupg
-%_gpg_name ${GPG_KEY_FPR}
+%_gpg_name ${GPG_ID}
 %__gpg /usr/bin/gpg
 %__gpg_sign_cmd %{__gpg} --force-v3-sigs --batch --no-armor -u "%{_gpg_name}" -sbo %{__signature_filename} --digest-algo sha256 %{__plaintext_filename}
 EOF
 
-echo "RPM signing configured for key: $GPG_KEY_FPR"
+echo "RPM signing configured for key: $GPG_ID"
 
 echo ">> Creating rpm package"
 if [[ ! -x fpm ]]; then
