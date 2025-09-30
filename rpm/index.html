@@ -24,7 +24,7 @@
 sudo dnf install -y gnupg wget
 
 # Add the CloudFoundry YUM repo
-cat <<EOF | sudo tee /etc/yum.repos.d/bosh-cloudfoundry.repo
+cat &lt;&lt;EOF | sudo tee /etc/yum.repos.d/bosh-cloudfoundry.repo
 [cloudfoundry]
 name=CloudFoundry CLI RPMs
 baseurl=https://rpm.ci.cloudfoundry.org/
@@ -37,7 +37,7 @@ EOF
 sudo dnf makecache
 sudo dnf install -y cf-cli
 
-# Other available packages
+# Install other available packages
 sudo dnf install -y bosh-cli
 sudo dnf install -y bosh-bootloader
 sudo dnf install -y uaa-cli
