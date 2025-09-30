@@ -41,6 +41,25 @@ gpg --allow-secret-key-import --import certs/private.key
 echo ">> List keys"
 gpg --list-secret-keys
 
+# -----------------------------
+# Setup RPM signing key
+# -----------------------------
+GPG_KEY_FPR=$(gpg --with-colons certs/public.key | awk -F: '/^fpr:/ {print $10; exit}')
+
+if [[ -z "$GPG_KEY_FPR" ]]; then
+  echo "ERROR: No GPG key found for signing RPMs"
+  exit 1
+fi
+
+# Create ~/.rpmmacros for fpm/rpm
+cat > ~/.rpmmacros <<EOF
+%_signature gpg
+%_gpg_path ${HOME}/.gnupg
+%_gpg_name ${GPG_KEY_FPR}
+EOF
+
+echo "RPM signing configured for key: $GPG_KEY_ID"
+
 echo ">> Creating rpm package"
 if [[ ! -x fpm ]]; then
   gem install fpm --no-document
@@ -77,6 +96,7 @@ done
 # -----------------------------
 echo ">> Creating RPM package"
 fpm -s dir -t rpm -n "${NAME:?required}" -v "${VERSION}" \
+   --rpm-sign \
   --vendor "${VENDOR:-Unknown}" \
   --license "${LICENSE:-Unknown}" \
   -m "${MAINTAINERS:-Unknown}" \

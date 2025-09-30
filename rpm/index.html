@@ -27,7 +27,7 @@ sudo dnf install -y gnupg wget
 cat &lt;&lt;EOF | sudo tee /etc/yum.repos.d/bosh-cloudfoundry.repo
 [cloudfoundry]
 name=CloudFoundry CLI RPMs
-baseurl=https://rpm.ci.cloudfoundry.org/
+baseurl=http://rpm.ci.cloudfoundry.org/
 enabled=1
 gpgcheck=1
 gpgkey=https://raw.githubusercontent.com/cloudfoundry/bosh-apt-resources/master/public.key
