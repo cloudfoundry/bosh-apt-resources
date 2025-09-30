@@ -44,7 +44,7 @@ gpg --list-secret-keys
 # -----------------------------
 # Setup RPM signing key
 # -----------------------------
-GPG_KEY_FPR=$(gpg --with-colons certs/public.key | awk -F: '/^fpr:/ {print $10; exit}')
+GPG_KEY_FPR=$(gpg --list-keys --with-colons | awk -F: '/^fpr:/ {print $10; exit}')
 
 if [[ -z "$GPG_KEY_FPR" ]]; then
   echo "ERROR: No GPG key found for signing RPMs"
