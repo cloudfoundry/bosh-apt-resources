@@ -56,9 +56,11 @@ cat > ~/.rpmmacros <<EOF
 %_signature gpg
 %_gpg_path ${HOME}/.gnupg
 %_gpg_name ${GPG_KEY_FPR}
+%__gpg /usr/bin/gpg
+%__gpg_sign_cmd %{__gpg} --force-v3-sigs --batch --no-armor -u "%{_gpg_name}" -sbo %{__signature_filename} --digest-algo sha256 %{__plaintext_filename}
 EOF
 
-echo "RPM signing configured for key: $GPG_KEY_ID"
+echo "RPM signing configured for key: $GPG_KEY_FPR"
 
 echo ">> Creating rpm package"
 if [[ ! -x fpm ]]; then
@@ -96,7 +98,6 @@ done
 # -----------------------------
 echo ">> Creating RPM package"
 fpm -s dir -t rpm -n "${NAME:?required}" -v "${VERSION}" \
-   --rpm-sign \
   --vendor "${VENDOR:-Unknown}" \
   --license "${LICENSE:-Unknown}" \
   -m "${MAINTAINERS:-Unknown}" \
@@ -110,6 +111,12 @@ if [[ -z "$RPM_FILE" ]]; then
   echo "ERROR: RPM not found for ${NAME}-${VERSION}"
   exit 1
 fi
+
+echo ">> Signing RPM package: $RPM_FILE"
+rpmsign --addsign "$RPM_FILE"
+
+echo ">> Verifying RPM signature"
+rpm --checksig "$RPM_FILE"
 
 WORKDIR=$(mktemp -d)
 
