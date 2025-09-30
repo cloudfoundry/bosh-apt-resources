@@ -116,6 +116,7 @@ echo ">> Signing RPM package: $RPM_FILE"
 rpmsign --addsign "$RPM_FILE"
 
 echo ">> Verifying RPM signature"
+rpm --import certs/public.key
 rpm --checksig "$RPM_FILE"
 
 WORKDIR=$(mktemp -d)
