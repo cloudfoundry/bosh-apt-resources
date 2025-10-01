@@ -123,7 +123,8 @@ mkdir -p "$TARGET_DIR"
 cp "$RPM_FILE" "$TARGET_DIR/"
 
 # Rebuild metadata
-createrepo_c --update $WORKDIR
+# createrepo_c --update $WORKDIR
+createrepo_c --database --checksum sha256 $WORKDIR
 
 # Sync back
 aws s3 sync "$WORKDIR" "s3://$RPM_RELEASE_BUCKET" --acl public-read
