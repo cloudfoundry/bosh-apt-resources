@@ -60,3 +60,15 @@ packages:
     git:
       user: cloudfoundry
       repository: cli
+
+  - name: om-cli
+    in_binary: om-linux-amd64-*tar.gz
+    out_binary: om
+    description: "CLI to interact with Ops Manager"
+    license: Apache2
+    vendor: "Cloud Foundry Foundation"
+    url: https://github.com/pivotal-cf/om
+    maintainers: https://github.com/pivotal-cf/om/graphs/contributors
+    git:
+      user: pivotal-cf
+      repository: om
