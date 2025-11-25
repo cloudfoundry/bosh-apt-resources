@@ -51,7 +51,7 @@ packages:
 
   - name: cf-cli
     in_binary: cf8-cli_*_linux_x86-64.tgz
-    out_binary: cf8
+    out_binary: cf
     description: "CLI version 8 to interact with CloudFoundry servers"
     license: Apache2
     vendor: "Cloud Foundry Foundation"
