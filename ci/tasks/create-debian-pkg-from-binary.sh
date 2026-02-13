@@ -69,6 +69,22 @@ for binary in $OUT_BINARY; do
   chmod +x recipe/${binary}
   recipe_binaries="${recipe_binaries} recipe/${binary}=/usr/bin/${binary} "
   provides="${provides} --provides ${binary} "
+  
+  # If the binary is a symlink, also include its target in the package
+  if [[ -L "recipe/${binary}" ]]; then
+    target=$(readlink "recipe/${binary}")
+    echo ">> Detected symlink: ${binary} -> ${target}"
+    # If target is a relative path in the same directory, include it
+    if [[ ! "$target" =~ ^/ ]]; then
+      target_file="recipe/${target}"
+      if [[ -f "$target_file" ]]; then
+        echo ">> Including symlink target: ${target}"
+        recipe_binaries="${recipe_binaries} ${target_file}=/usr/bin/${target} "
+      else
+        echo >&2 "WARNING: Symlink target ${target_file} not found!"
+      fi
+    fi
+  fi
 done
 
 
