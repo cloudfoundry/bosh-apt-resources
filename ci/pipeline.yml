@@ -28,7 +28,7 @@ jobs:
         source:
           repository: bosh/integration
           tag: main
-        type: docker-image
+        type: registry-image
       inputs:
       - name: bosh-apt-resources
       - name: #@ package.name
@@ -60,7 +60,7 @@ jobs:
         source:
           repository: bosh/integration
           tag: main
-        type: docker-image
+        type: registry-image
       inputs:
       - name: bosh-apt-resources
       - name: #@ package.name
