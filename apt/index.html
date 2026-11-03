@@ -13,7 +13,7 @@ sudo apt-get update
 sudo apt install -y gnupg wget
 
 # Import the CloudFoundry APT repo GPG key
-wget -q -O - https://raw.githubusercontent.com/cloudfoundry/bosh-apt-resources/master/public.key | sudo apt-key add -
+wget -q -O - https://raw.githubusercontent.com/cloudfoundry/bosh-apt-resources/HEAD/public.key | sudo apt-key add -
 
 # Add the CloudFoundry APT repo
 echo "deb http://apt.ci.cloudfoundry.org stable main" | sudo tee /etc/apt/sources.list.d/bosh-cloudfoundry.list

@@ -116,7 +116,7 @@ resources:
 - name: bosh-apt-resources
   type: git
   source:
-    branch: master
+    branch: main
     uri: https://github.com/cloudfoundry/bosh-apt-resources
 
 - name: update-apt-index
